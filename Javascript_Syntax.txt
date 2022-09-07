@@ -1,0 +1,610 @@
+                                                                                      Javascript Fundamentals
+                                                                                      -----------------------
+
+*Values and Variables
+*Data types(primitive types): Number, String, Boolean, Undefined, Null, Symbol(ES2015), Biglnt(ES2020)
+*Let, const and var
+*Basic Operators: +, -, x, /, %, ++, **,...
+*Strings and Template Literals
+*Taking Decisions: if / else Statements
+*Type Conversion and Coercion
+*Truthy and Falsy Values: Falsy Values(0, " ", undefined, null, NaN)
+*Nullish Values: null, undefined
+*Equality Operators:== vs.===(not perform type coercion)
+*Logical Operators: &&, ||, !
+*The switch Statement------------------------------Not known-------------------------
+*Statements and Expressions
+  -Statements: a unit of code that performs an action, if else statement,...
+  -Expressions: produce a value, 1 + 1,...
+*The Conditional Operator(Ternary)
+*Strict Mode: is a developer tool which detects things you might be doing by accident and brings them to your attention so you can fix them
+*Function Declaretions vs. Expressions vs. Arrows
+*Array and Array operations(Methods)
+*Object
+*Iteration: The For Loop, The While Loop
+*strings are also iterables(use like array)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                  What's the DOM and DOM manipulation
+                                                                                  -----------------------------------
+*what is DOM: 
+-DOM stands for Document Object model, part of the web APIs, structured representation of HTML documents, allows javascript to access HTML elements and styles to manipulate them
+-DOM stored in a tree structure
+-how to access to DOM: DOM always starts with "the document object" at the very top of the code, so that we can access easily by javascript code
+                                                                                 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                 How Javascript Work Behind the Scenes
+                                                                                 -------------------------------------
+*what is javascript
+   -High-level: do not have to manage resources(cpu, ram), because "the abstractions" do it from us(but make the programs low than C or C++)
+   -Garbage-collected: takes "memory management" away from us
+   -Interpreted or just-in-time compiled: not compilation a portable file but after compilation then execution right away
+   -Multi-paradigm: procedural, object-oriented, functional --> imperative vs. declarative
+   -prototype-based object oriented
+   -first-class functions: functions are simply treated as variables(can pass them into other functions)
+   -dynamic-typed language: data type of variable is automatically changed
+   -single-threaded: the execution of instructions in a single sequence
+   -non-blocking: not occurring at the same time, non-blocking
+   -event loop(separate post):
+
+*javaScript engine(steps): *notice: all this parsing, compilation and optimization happens in some special threads inside the engine that we cannot access from our code
+   -(1)parsing: during the parsing process, the code is parsed into a data structure called the abstract syntax tree or AST(parse means "engine" just read the code but without executing it)
+   -(2)compilation: takes the generated AST and create a very unoptimized compilation version so that it can start executing as fast as possible,
+                    in the background, this code is being optimized and recompiled during the already running program execution
+   -(3)execution(separate post):
+   
+*execution in javascript engine:
+   -definition of execution context: an execution context is an environment in which a piece of JS is executed. Stores all the necessary information for some code to be executed
+                                               
+   -what is inside of execution context: *notice: all of this is generated in a so-called creation phase which happens right before execution
+      -(1)variable environment:
+         -all our variables and function declarations are stored  
+         -functions  
+         -arguments object: contains all the arguments that were passed in(arrow function doesn't have, they use the arguments object from their closest regular function parent)  
+      -(2)scope chain: consists of variables(reference, not coppy) that are located outside of the current scope(global, function, block)
+      -(3)this keyword(separate post):
+             
+   -definition of callstack: the place contains all execution context(last in first out), when the callstack is empty the engine will keep waiting for callback functions to execute these
+
+   -definition scope chain:
+
+*javaScript runtime(in the browser):
+   -definition: as a big box which includes all the things that we need in order to use JavaScript in the browser
+   -included(created by browser):
+      -(1)javascript engine
+      -(2)web APIs: web APIs are functionalities provided to the engine, they are not part of the JavaScript language itself(we have Browser APIs, Third-party APIs)
+      -(3)callback queue: a data structure that contains all the callback functions that are ready to be executed(callback queue is provided by browser, included the event loop)
+
+*scope in javascript: *notice: some people use the word scope for all of this(scoping, lexical scoping,...)
+   -scope concepts:
+      -scope: scope is a lifetime(home) of a variable in which a certain variable is declared(there is global scope, function scope, and block scope, one variable has one scope)
+      -scope of a varible: is a region of our code, where a certain variable can be accessed
+      -scoping: determining where our program's variables are organized and accessed(ask the question, where do variables live?)
+      -lexical scoping: means that a variable defined outside a function can be accessible inside another function defined after the variable declaration,
+                        variables defined inside a function will not be accessible outside that function
+   -types of scope*1:
+      -global scope: outside of any function or block
+      -function scope: variables are accessible only inside function, NOT outside
+      -block scope: variables are accessible only inside block(only applies to let and const, NOT var, functions are also block-scoped if only use strict mode)
+ 
+   *notice:
+      -(1)every scope(global, function, block) always has access to all the variables from all its parent scopes, means if a code try to access a variable it look in the variable environment first,
+       then the current scope chain, if can't find the variable, the current scope will look up the variable environment of its parent scopes and parents scope chain,..
+
+*hoisting in javascript:
+   -definition: makes some types of variables usable(accessible) in the code before they are actually declared(variables lifted to the top of their scope)
+   -how it work: behind the scenes the code is basically scanned for variable declarations before it is executed(this happens during the so-called creation phase of the execution context)
+   -why we need hoisting: so that we can use function declarations before actual declare them(use for mutual recursion)
+   -what type of variables can be hoisted:
+      -function declarations----------->: Hoisted(yes),  Initial Value(actual function),    Scope(block)*1
+      -var variables------------------->: Hoisted(yes),  Initial Value(undefined),          Scope(function)
+      -let and const variables--------->: Hoisted(no),   Initial Value(uninitialized,TDZ),  Scope()
+      -function expression and arrows-->: depends if using let, const or var
+   -definition of temporal dead zone(TDZ): 
+      -the region of the scope in which the variable is defined but can't be used in any way(starts at the beginning of the scope until the line where it(let, const) is defined)
+
+   *notice:
+      -(1)function declarations is block scope when in strict mode, otherwise function scope
+
+*this keyword in execution context:
+   -definition of this keyword: the this keyword depends on the way in which(mà) a function is called
+   -the way functions can be called:
+      -method------------------>: a function attached to an object --> the this keyword inside that method will points to the object that is calling the method
+      -simple function call---->: the this keyword inside a function = undefined(only valid for strict mode, otherwise global object -> windown)
+      -arrow function---------->: this keyword = this of surrounding function
+      -event listener---------->: this keyword = DOM element that the handler is attached to
+      -new, call, apply, bind-->: "mdn"
+
+*primitive and reference types(objects) in JS:
+   -primitive types: number , string , boolean , null , undefined , symbol and bigint(are stored in the call stack, or in execution contexts in which they are declared)
+   -reference types(object): object literal, array, function, many more,...(get stored right in the memory heap)
+   -value of primitive type: if you looked at the value of a primitive((in call stack)), you'd see the actual value itself(28, 'Tyler', false, etc)
+   -value of reference type: if you looked at the value of a reference type(in call stack), you'd see a memory address(a "reference" to a spot in memory)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                 Data structures, Modern Operators and Strings
+                                                                                 ---------------------------------------------
+*destructuring array:
+
+   -retrieve:              const arr = [2, 3, 4]
+                           const [x ,y, z] = arr // 2 3 4
+                           ---------------------------------------------------------------
+   -switching variables:   let one = 1
+                           let two = 2
+                           [two, one] = [one, two] // 1 2
+                           ---------------------------------------------------------------
+   -nested retrieve:       const nested = [2, 4, [5, 6]]                      
+                           const [i, , [j, k]] = nested // 2 5 6
+                           ---------------------------------------------------------------
+   -default value:         const [p = 1, q = 1, r = 1] = [8, 9] // 8 9 1       
+                           ---------------------------------------------------------------
+*destructuring objects:   
+
+   -retrieve:              const obj = { a: 1, b: 2 }
+                           const { a } = obj // a is 1
+                           ---------------------------------------------------------------
+   -give a new name:       const obj = { a: 1, b: 2 }
+                           const { a: d, b: e } = obj // d is 1
+                           ---------------------------------------------------------------
+   -default value:         const { b = 2 } = { b: undefined }; // b is 2
+                           const { c = 2 } = { c: null }; // c is null
+                           ---------------------------------------------------------------
+   -mutating variable:     let a = 111
+                           const obj = { a: 999}
+                           ({ a } = obj) // 99
+                           ---------------------------------------------------------------
+   -nested retrieve:       const obj = { a: 1, b: { c: 2 } }
+                           const { a, b: { c }} = obj // 1, 2
+                           ---------------------------------------------------------------
+*destructuring function:   
+   -object:                myFunction({ a: 1, b: 2, c: 3 }) 
+                           function myFunction({ a, b, c })  // 1 2 3
+                           ---------------------------------------------------------------  
+   -array:                 myFunction([1, 2, 3]) 
+                           function myFunction([a, b, c]) // 1 2 3
+
+   *notice: other operator(default value, nested retrieve,...) based on destructuring array, or object
+                           ---------------------------------------------------------------
+*spread operator(right side):
+
+   -spread array in array  :       const arr = [7, 8, 9]
+                                   const newArr = [1, 2, ...arr] // 1 2 7 8 9
+                                   -------------------------------------------------------
+   -spread array in object :       const array = [1, 2, 3]
+                                   const obj = { ...array } // { 0: 1, 1: 2, 2: 3 }
+                                   -------------------------------------------------------
+   -spread object in object:       const obj1 = { foo: 'bar', x: 42 }
+                                   const clonedObj = { ...obj1 } // // clonedObj { foo: "bar", x: 42 }
+                                   -------------------------------------------------------
+   -spread in function(argument):  myFunction(...[1, 2, 3]), function myFunction(x, y, z) // 1 2 3
+                                   -------------------------------------------------------
+*rest operator(left side):
+
+   -rest operator in array:        const [one, two, ...numbers] = [1, 2, 3, 4] // 1, 2, [3, 4]
+                                   -------------------------------------------------------
+   -rest operator in object:       const { a, b, ...numbers } = { a: 1, b: 2, c: 3, d: 4 } // 1 2 { c: 3, d: 4 }
+                                   -------------------------------------------------------
+   -rest in function(param):       funct(1, 2, 3, 4) 
+                                   function funct(...numbers)  // [1, 2, 3, 4]
+                                   -------------------------------------------------------
+                                   funct([1, 2, 3, 4]) 
+                                   function funct([one, two, ...numbers]) // 1, 2, [ 3, 4 ]  
+                                   -------------------------------------------------------
+                                   funct({ a: 1, b: 2, c: 3, d: 4 }) 
+                                   function funct({ a, b, ...numbers }) // 1 2 { c: 3, d: 4 }              
+                                   -------------------------------------------------------
+
+*short circuiting:
+
+   -logical Or(||):    console.log(0 || "" || undefined) // return undefined
+                       console.log(0 || "Hieu")          // return "Hieu"     
+                       console.log(5 || "Hieu")          // return 5   
+
+   -logical And(&&)    console.log(0 && "" && undefined) // return 0
+                       console.log(0 && "Hieu")          // return 0    
+                       console.log(5 && "Hieu")          // return "Hieu"  
+
+   -logical Or, And:   console.log(0 || "" && undefined) // return ""              ==> (0 || ("" && undefined))
+                       console.log(0 && "" || undefined) // return undefined       ==> ((0 && "") || undefined)
+
+*the nullish coalescing operator: 
+
+   -how it work:       console.log("  " ?? "Hieu") // return "  "  
+                       console.log(null ?? "Hieu") // return "Hieu"  
+
+   -definition: is a logical operator that returns its right-hand side operand when its left-hand side operand is null or undefined       
+
+*logical assignment operators:
+
+   -logical Or:        const a = { duration: 50, title: '' }
+                       a.duration = a.duration || 10   ==>  a.duration ||= 10
+
+   -logical And:       const a = { duration: 50, title: '' }
+                       a.duration = a.duration && 10   ==>  a.duration &&= 10
+
+
+   -logical ??:        const a = { duration: 50, title: '' }
+                       a.duration = a.duration ?? 10   ==>  a.duration ??= 10
+
+*The for-of Loop: more info at Mozilla Developer Network(MDN)
+
+*Enhanced Object Literals:
+   -(1):            const one = 1
+          old -->   const obj = { one: one}         
+          new -->   const obj = { one }
+
+   -(2):  old -->   const obj = { order: function() {} }
+          new -->   const obj = { order() {} }
+
+   -(3)             const weekdays = ["mon", "tue", "wed"]
+          old -->   const obj = { mon            : "monday" }
+          new -->   const obj = { [1 + 1]        : "monday" }
+          new -->   const obj = { [`mon`]        : "monday" }
+          new -->   const obj = { [weekdays[0]]  : "monday" }
+          new -->   const obj = { [[...weekdays]]: "monday" }
+   *notice: can compute or do anything inside the brackets
+
+*Optional Chaining: more info at Mozilla Developer Network(MDN)
+
+*Looping Objects: Object Keys, Values, and Entries: more info at Mozilla Developer Network(MDN)
+
+*data structures: Set, return unique items ==> more info at Mozilla Developer Network(MDN)
+
+*data structures: Map, like object but key can be any types ==> more info at Mozilla Developer Network(MDN)
+
+*string methods: more info at Mozilla Developer Network(MDN)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                    A Closer Look At Functions 
+                                                                                    --------------------------
+*default parameters:     function multiply(a = 1, b = 2)
+
+*be careful how Arguments work: Value vs. Reference
+
+*First-Class and Higher-Order Functions:
+   -First-Class Function: means functions are simply values
+   -Higher-Order Function: means function that perform operations on other functions(like receives another function as an argument, or returns a function)
+
+*the call method: the call() method calls the function with a given this value and arguments provided individually
+                                                                                                                 
+*the apply method: the apply() method calls the specified function with a given this value, and arguments provided as an array
+
+*the bind method: the bind() method creates a new function that, when called, has its this keyword set to the provided value, with a given sequence of arguments preceding any provided 
+
+*Immediately Invoked Function Expressions (IIFE): is a JavaScript function that runs as soon as it is defined, this prevents accessing variables within the IIFE as well as polluting the global scope
+
+*Closures: 
+   -any function always has access to the "variable environment" of the execution context in which the function was created even after the execution context is gone
+   -a closure is the combination of a function bundled together (enclosed) with references to its surrounding state     
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                        Working With Array 
+                                                                                        ------------------
+*simple array methods(mdn):
+   -slice method
+   -splice method
+   -reverse method
+   -concat method
+   -join method
+   -at method
+
+*forEach method(mdn)
+
+*Data Transformations: map, filter, reduce -----------> these are methods that we use to create new arrays based on transforming data from other arrays(mdn)
+
+*The Magic of Chaining Methods: function chaining is a pattern in JavaScript where multiple functions are called on the same object consecutively
+
+*find method(mdn)
+
+*findIndex method(mdn)
+
+*some and every methods(mdn)
+
+*flat and flatMap methods(mdn)
+
+*sort method(mdn)
+
+*More Ways of Creating and Filling Arrays: new Array().fill()
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                        Numbers, Dates, Intl and Timers 
+                                                                                        -------------------------------
+*Converting and Checking Numbers: 
+   -to converting and checking numbers, we use primitive wrapper object(Number)
+   -Number methods:
+      -Number()
+      -Number.parseInt()
+      -Number.parseFloat()
+      -Number.isNaN()
+      -Number.isFinite()
+      -Number.isInteger()
+      -and more at MDN
+
+*Math and Rounding numbers:
+   -Math is a built-in object 
+   -Math methods:
+      -Math.sqrt()
+      -Math.min()
+      -Math.max()
+      -Math.PI
+      -Math.random()
+      -Math.trunc()
+      -Math.round()
+      -Math.ceil()
+      -Math.floor()
+
+*Numeric Separators:
+   -Numeric Separators is a formatted numbers in a way that is easier for us, or for other developers to read and to understand
+   -example: const price = 245_999(245999) but Number("230_000") --> NaN
+
+*Working with BigInt: 
+   -the number of digits that bits can store is equal to 2^ the position on the array of bits(bits - 1)
+   -BigInt is a primitive wrapper object used to represent and manipulate primitive bigint values, which are too large to be represented by the number primitive
+   -example: console.log(90071992547409901n + 1n) // 90071992547409902n
+             console.log(BigInt(-12345)) // -12345n  
+
+*Creating Dates:
+   -Unix time: 00:00:00 UTC on 1 January 1970
+      -create unix time in js: new Date(0)
+   -Unix timestamp: is a way to track time as a running total of seconds(milliseconds in Javascript)
+      -create unix timestamp in js: new Date(1000) // 1000 is milliseconds, also unix timestamp 
+
+   -when we want to create, or do perform on Date, we use Date objects(new Date())  
+
+*Internationalizing Dates: format Dates according to different languages
+
+*Internationalizing Numbers: format umbers according to different languages
+
+*Timers: setTimeout and setInterval
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                        Object-Oriented Programming(OOP)
+                                                                                        --------------------------------
+*What is Object-Oriented Programming?
+   -OOP is a programming paradigm(how we write and organize code) that is based on the concept of objects(programs are treated as a collection of objects. Every object is an instance of a class)
+   -when programming based on the concept of object it makes: code readability, maintainability, extensibility(inheritance)
+   -the most popular model of OOP is: class-based 
+   -what is class: class is an abstraction of the object. Objects with similar properties will be grouped into a class
+   -why class-based: because it provides template for creating objects
+   -good class implementation: is to satisfy the 4 fundamental OOP principles
+   -four fundamental principles in OOP: Abstraction, Encapsulation, Inheritance, Polymorphism
+      -Abstraction: only get an overview perspective of the thing we're implementing, instead of messing with details that don't really matter to our implementation
+      -Encapsulation: keeping properties and methods private inside the class, so they are not accessible from outside the class
+      -Inheritance: making all properties and methods of a certain class available to a child class, forming a hierarchical relationship between classess, allows to reuse common logic, and to model real-world relationships
+      -Polymorphism: a child class can overwrite a method it inherited from a parent class(perform on the same method but in different ways)
+
+*OOP in JavaScript:
+   -in Javascript, OOP is prototype-based
+   -what is prototype-based:
+      -prototype-based means all objects in JavaScript are linked to a certain prototype object -->  object.__proto__
+      -if a property or a method cannot be found in a certain object, JavaScript will look into its prototype object, that contains methods and properties, this behavior is usually called: prototypal inheritance / delegation
+
+*assessor properties in objects: Setters and Getters
+   -getters and setters are basically functions that get and set a value
+   -more about this at mdn
+
+*static method (or static function) is a method only available on the classes, not for the instances(objects)
+
+*Encapsulation: Protected Properties and Methods
+   -properties and methods convention: underscore in front of property, or method name
+   -private fields: use the # symbol in front of property name, and must be declared in an enclosing class, not inside the constructor, example: #movements = []
+   -private methods:  use the # symbol in front of method name
+
+*implementing OOP in JS: Constructor functions
+   -when call functions with the "new" Operator, new {} is created
+   -function is called, this => new {}
+   -new {}.__proto__ linked to Constructor.prototype
+   -function automatically return {}
+
+   *notice: {} linked to prototype --> {}.__proto__ === Constructor.prototype / {}
+
+*Inheritance in Constructor functions:
+   -inheritance of properties: call parent Constructor with the this keyword of children Constructor and arguments, all inside of children class, example: Person.call(this, firstName, birthYear)
+   -inheritance of methods: 
+      -set prototype property of child Constructor, to an object that have prototype property of parent Constructor, example: Student.prototype = Object.create(Person.prototype)
+      -then set constructor of prototype of child Constructor to child Constructor because object.create return an object with constructor of parent constructor, example: Student.prototype.constructor = Student
+      
+
+*implementing OOP in JS: ES6 Classes
+   -when call Classes with the "new" Operator, methods that are written in the Class, but outside of the constructor are created, that will then be on the prototype of the objects(instances of class)
+   -then constructor declared in the Class is called
+   -constructor is called, new {} is created, this in constructor => new {}
+   -class automatically return {}
+
+   *notice:
+      -classes are NOT hoisted
+      -classes are first-class citizes
+      -classes are executed in strict mode
+
+*Inheritance in ES6 Classes:
+   -inheritance of methods: write "extends" after the name of class, then the name of parent class or constructor function, example: class Student extends PersonCl
+   -inheritance of properties: 
+      -when there are extra properties compared to parent class: use "extends" keyword, then call super() with arguments inside constructor of subclass, super is basically the constructor function of the parent class
+      -when there are NOT extra properties compared to parent class: we could have no constructor at all, only need the "extends" keyword
+      -supper() is responsible for creating the disc keyword in this subclass, so it always needs to happen first
+
+*implementing OOP in JS: Object.create()
+   -Object.create essentially manually set the prototype of an object to any other object that we want
+   -how object.create work: Object.create creates a new object and the prototype of that object will be the object that we passed in(the argument of object.create)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                        Asynchronous Javascript: Promises, Async/Await, and AJAX
+                                                                                        --------------------------------------------------------
+*Asynchronous JavaScript, AJAX and APIs:
+   -Asynchronous programming: is all about coordinating the behavior of our program over a certain period of time(not occurring at the same time, non-blocking)
+   -AJAX(Asynchronous Javascript And Xml): allow us to communicate with remote web servers in an asynchronous way, with AJAX calls, we can request date from web servers dynamically(so without reloading the page)
+   -API: is a way for two or more computer programs to communicate with each other. It is a type of software interface, offering a service to other pieces of software
+   -XML: is a data format which to transmit data on the web, however, these days no API uses XML data anymore, so instead, most APIs these days use the JSON data format
+
+*How the Web Works: Requests and Responses(request-response model or Client-server architecture)
+   -the first step, the browser makes a request to a DNS server
+   -DNS server will convert the domain to the real IP address and then sent back to the browser(this all happens through your internet service provider)
+   -once we have the real IP address, a TCP/IP* socket connection is established between the browser and the server(this connection is kept alive for the entire time, the time it takes to transfer or all data of the Website)
+   -once we have "TCP/IP" socket connected, finally our "HTTP/HTTPS" request is made
+   -the server receives request, then working on it until it has our data(TCP/IP are still connected, not interrupt), and send it back using "HTTP/HTTPS" response
+
+   -what are TCP and IP: they are "communication protocols" that define exactly how data travels across the Web, they are the ones who set the rules about how data moves on the Internet
+      -TCP: is the Transmission Control Protocol
+         -the first job of TCP is to break the requests/responses down into thousands of small chunks called packets, before they are sent 
+         -once the small packets arrive at their final destination, TCP will reassemble all the packets into the original request/response
+
+      -IP: is the Internet Protocol
+         -the job of the IP protocol is to actually send and route these packets through the Internet(using IP addresses on each packet)
+         -using "IP addresses on each packet" ensures that they arrive at the destination they should go
+
+      *notice:
+         -this TCP and IP is necessary so that each packet can take a different route through the Internet
+         -because this way the message arrives at the destination as quick as possible
+         -which would not be possible if we sent the entire data simply as a big chunk
+
+   -what is HTTP/HTTPS: besides TCP/IP, HTTP/HTTPS are also another "communication protocol", that allows clients and Web servers to communicate(response & request)
+      -HTTP: stands for Hypertext Transfer Protocol
+      -HTTPS: S is Secure, it is used for secure communication over a computer network, in HTTPS, the communication protocol is encrypted using TLS or SSL, TLS/SSL are also other protocols
+
+   -what is Communication Protocol: is simply a system of rules that allows two or more parties to communicate
+
+   -example: https://restcountries.eu/rest/v2/alpha/PT
+      -htttps: is the one of the two Protocol, HTTP or HTTPS
+      -restcountries: is Domain name
+      -rest/v2/alpha/PT: is Resource
+
+   -this is how the real address looks like: https://104.27.142.889.443, IP adress: 104.27.142.889, Port number: 443
+
+*Promises and the Fetch API:
+   -Promise: is a container for a future value, they can handle multiple asynchronous operations easily and provide better error handling than callbacks and events
+   -implement Promise: mdn
+
+*Asynchronous Behind the Scenes: The Event Loop:
+   -Callback queue: a data structure that holds all callback functions that are attached to asynchronous tasks, the callback queue also contains callbacks coming from DOM events like clicks or key presses or whatever
+   -Microtasks queue: a data structure that it has priority over the callback queue
+   -Event Loop: whenever the call stack is empty the event loop takes "callbacks" from the callback queue and puts them into call stack so that they can be executed
+   -where asynchronous tasks will run is: in the web API environment of the browser
+  
+   *how asynchronous tasks work in JS:
+      -first, asynchronous tasks run in the background(the web API environment of the browser)
+      -usually, async tasks will be attached with callbacks, which will be called when a async task is done
+      -when a task is done, the environment put the callback on the next line, in the queue
+      -finally, the event Loop looks into the call stack and determines whether it's empty or not(except the global context)
+      -if the stack is indeed empty then it will take the first callback from the callback queue, and put it on the call stack to be executed(this is called an event loop tick) 
+      -at the end of an event loop tick(after a callback has been taken from the callback queue), the event loop will check if there are any callbacks in the microtasks queue 
+      -and if there are, it will run all of them before it will run any more callbacks from the regular callback queue
+
+      -remember: callback, which is coming from a promise will not be moved into the callback queue, instead, the microtasks queue
+
+*Consuming Promises with Async/Await: mdn
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                        Modern Javascript Development: Modules, Tooling, and Functional
+                                                                                        ---------------------------------------------------------------
+*Modern JavaScript Development:
+   -how we organize our code:
+      -we use modules: we divide our projects into multiple modules(these modules can share data between them and make our code more organized and maintainable)
+      -we can include 3rd-party modules(thousands of open source modules that developers share on the NPM repository)
+
+   -what is NPM: 
+      -NPM stands for Node Package Manager, because it was originally developed together with NodeJS and for NodeJS
+      -However, NPM has established itself as the goal to the repository for all kinds of packages in Modern JavaScript Development
+      -in order to actually download and use and share packages we use the NPM software installed on our computer
+      -NPM is both the repository in which packages live and a program that we use on our computers to install and manage these packages
+
+   -what is NPX:
+      -a tool for executing Node packages(download, "execute",then remove node packages)
+
+   -how we complete our code: when the development step is done, now project needs to go through a build process where one big final JS bundle is built(the final file which will deploy to web server for production)
+      -build process:
+         -first step, will bundle all modules together into one big file(this is a pretty complex process which can eliminate unused code and compress code as well),
+            -this step is super important for two big reasons, first older browsers don’t support modules at all, so code that’s in a module could not be executed by any older browser,
+            -and second, it’s also better for performance to send less files to the browser and it’s also beneficial that the bundling step compresses code
+         -second step we do something called “transpiling” and “polyfilling”, which is basically to convert all modern JavaScript syntax and features back to old ES5 syntax(so that even older browsers can understand)
+            -we use Bable to “transpiling” and “polyfilling”
+      -tools for build process: webpack or parcel(Javascript bundlers)
+
+*Modules in Javascript:
+   -definition module:
+      -reusable piece of code that encapsulates implementation details of a certain part of our project
+      -a standalone file, but it doesn’t have to be
+   -what is in module file:
+      -codes, or also ”imports” and “exports”
+   -advantage:
+      -modules make it really easy to compose software(small building blocks that we can then put together in order to build really complex applications)
+      -isolate components: modules can be developed in isolation without thinking about the entire codebase
+      -abstract code: implement low-level code in modules and import these abstractions into other modules 
+      -organized code: modules naturally lead to a more organized codebase(isolate components, abstract code)
+      -reuse code: modules allow to easily reuse the same code, even across multiple projects
+   -history of modules: so as of ES6, JavaScript has a native built-in module system(before ES6 we had to implement them ourselves or use external libraries)
+
+   -the different between ES6 Module and Script:                               ES6 Module                Script
+                                                   Top-level variables:     Scoped to module             Global
+                                                   Default mode       :       Strict mode            "Sloppy" mode
+                                                   Top-level this     :        undefined                 window
+                                                   Imports and Exports:           yes                      no 
+                                                   HTML linking       :  <Script type="module">         <Script>  
+                                                   File downloading   :       Asynchronous             Synchronous
+
+   -how ES6 Modules are imported:
+      -first, a file is parsed, if there are "top-level imports"(make imports known before execution), imports are hoisted, and downloaded from the server(downloading happens in an asynchronous way)
+      -after a module arrives, it's also parsed and the modules exports are linked(live connection) to the imports which in the file
+      -finally, the process of importing modules is finally finished, it's time for the importing module to be finally executed as well
+ 
+      -notice: the whole process of importing modules(of top-level imports) happens before the code in the main module(the file) is actually executed(means modules are imported synchronously) 
+      
+      -why do we actually want modules to be loaded in a synchronous way: this is the easiest way in which we can do things like bundling and dead code elimination(deleting code that's actually not even necessary)
+
+   -export: 
+     -export values out of a module(simple values or even entire functions)
+     -whatever we export from a module is called the public API
+   -import: 
+     -import values from other modules
+     -and these other modules from which we import are then called dependencies of the importing module
+      (because the code that is in the module that is importing cannot work without the code that it is importing from the external module)
+
+*other programming paradigms:
+   -imperative programming: we explain the computer every single step it has to follow to achieve a result
+
+   -declarative programming:
+      -we simply describe the way that the computer should achieve a certain result(the how it should do it, the step by step instructions, we do not care about them)
+      -declarative programming can be achieved using inbuilt JavaScript methods
+
+   -functional programming: is a declarative paradigm which is based on the idea of writing software simply by combining multiple so called "pure functions", while avoiding side effects and mutating data
+      -side effect: is a modification of any data that's outside of a function(mutating external variables, logging to console, writing to DOM)
+      -pure function: is a function that does not mutate any external variables, and that does also not depend on any external variables(a function without side effects)
+      -immutability: "state" which also means data, that is never modified(instead, state is copied and the copy is mutated and returned)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                THE END
+*notice
+-The switch Statement------------------------------Not known-------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
